@@ -158,13 +158,20 @@ int remove_file(AMDeviceRef d, NSDictionary *options) {
     }
     
     if (remotePath) {
-        if (AFCRemovePath(connectionRef, [remotePath UTF8String])) {
-            dsprintf(stderr, "couldn't remove file %s", [remotePath UTF8String]);
+        int retErr = AFCRemovePath(connectionRef, [remotePath UTF8String]);
+        if (retErr == 10) {
+            dsprintf(stderr, "Couldn't remove file %s, no write permission", [remotePath UTF8String]);
+            
+        } else if (retErr == 8) {
+           dsprintf(stderr, "Couldn't remove file %s, file doesn't exist on device", [remotePath UTF8String]);
+            
+        } else if (retErr) {
+            dsprintf(stderr, "Couldn't remove file %s with error: %d", [remotePath UTF8String], retErr);
         } else {
             dsprintf(stdout, "Successfully removed file %s", [remotePath UTF8String]);
         }
         
-        return 0;
+        return retErr;
     }
     dsprintf(stdout, "\n");
     for (NSString *key in outputContent) {
@@ -173,7 +180,7 @@ int remove_file(AMDeviceRef d, NSDictionary *options) {
         
         dsprintf(stdout, "%s%s%s\n", dcolor("yellow"),[key UTF8String], colorEnd());
         for (NSString *filename in ar) {
-            dsprintf(stdout, "\t%s\n", [filename UTF8String]);
+            dsprintf(stdout, "    %s\n", [filename UTF8String]);
         }
         dsprintf(stdout, "\n");
     }

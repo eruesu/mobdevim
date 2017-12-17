@@ -14,17 +14,17 @@ int debug_application(AMDeviceRef d, NSDictionary* options) {
   AMDServiceConnectionRef connection = NULL;
   NSDictionary *params = @{@"CloseOnInvalidate" : @YES, @"InvalidateOnDetach" : @YES};
   AMDeviceSecureStartService(d, @"com.apple.debugserver", params, &connection);
-//  int socket = (int)AMDServiceConnectionGetSocket(connection);
-  
-  void * handle = dlopen("/Users/derekselander/Desktop/LLDBRPC", RTLD_NOW);
-  
-  void *socketHandle = NULL;
-  int (*createSocket)(void *, char *) = dlsym(handle, "_ZN3rpc10Connection18ConnectToRPCServerEPKc");
-  int (*getConnection)(void *, int) = dlsym(handle, "_ZNK3rpc10Connection18SendFileDescriptorEi");
-  assert(createSocket && getConnection);
-  
-  
-  createSocket(&socketHandle, "/Applications/Xcode.app/Contents/SharedFrameworks");
+  int socket = (int)AMDServiceConnectionGetSocket(connection);
+    CFSocketCreateWithNative(NULL, socket, AF_UNIX, NULL, NULL);
+//  void * handle = dlopen("/Users/derekselander/Desktop/LLDBRPC", RTLD_NOW);
+//
+//  void *socketHandle = NULL;
+//  int (*createSocket)(void *, char *) = dlsym(handle, "_ZN3rpc10Connection18ConnectToRPCServerEPKc");
+//  int (*getConnection)(void *, int) = dlsym(handle, "_ZNK3rpc10Connection18SendFileDescriptorEi");
+//  assert(createSocket && getConnection);
+//
+//
+//  createSocket(&socketHandle, "/Applications/Xcode.app/Contents/SharedFrameworks");
   
 //  int remoteFD = getConnection(&socketHandle, socket);
   

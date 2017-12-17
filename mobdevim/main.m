@@ -96,7 +96,6 @@ int main(int argc, const char * argv[]) {
                   assertArg();
                   actionFunc = &remove_file;
                   [getopt_options setObject:[NSString stringWithUTF8String:optarg] forKey:kRemoveFileBundleID];
-                  
                   if (argc > optind) {
                       [getopt_options setObject:[NSString stringWithUTF8String:argv[optind]] forKey:kRemoveFileRemotePath];
                   }
